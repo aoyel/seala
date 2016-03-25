@@ -1,14 +1,9 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var Header = require('./components/header.jsx');
-var Footer = require('./components/footer.jsx');
-var Article = require('./components/article.jsx');
-
-var Content = require('./components/content.jsx');
-var View = require('./components/view.jsx');
-var Post = require('./components/post.jsx');
-
-var NotFound = require('./components/notfound.js');
+var Layout = require('./layout/default.jsx');
+var Default = require('./view/default.jsx');
+var NotFound = require('./view/notfound.jsx');
+var Post = require('./view/post.jsx');
 
 var ReactRouter = require('react-router');
 var Router = ReactRouter.Router;
@@ -17,26 +12,11 @@ var IndexRoute = ReactRouter.IndexRoute;
 var hashHistory = ReactRouter.hashHistory;
 
 
-var Container = React.createClass({
-	render: function() {
-		return (
-			<div className="container">
-				{this.props.content}					
-			</div>
-		);
-	}	
-});
-
-
 const App = React.createClass({
 	render: function() {
 		moment.locale("zh-cn");
 		return (
-			<div>
-				<Header />
-				<Container content={this.props.children} />
-				<Footer />				
-			</div>
+			<Layout content={this.props.children} />
 		);
 	}
 });
@@ -44,7 +24,7 @@ const App = React.createClass({
 ReactDOM.render(
 	<Router >
 		<Route history={hashHistory} path="/" component={App}>
-			<IndexRoute component={Content}/>			
+			<IndexRoute component={Default}/>			
 			<Route path="/view/:id" component={View}/>
 			<Route path="/post" component={Post}/>
 			<Route path="*" component={NotFound}/>

@@ -9,6 +9,7 @@ router.get('/', function(req, res, next) {
 	res.render('index', { title: 'seale'});
 });
 
+
 router.get('/post', function(req, res, next) {
   	res.render('post', { title: 'post'});
 });
@@ -46,8 +47,7 @@ router.get('/list', function(req, res, next) {
 	});
 });
 
-router.get('/hot', function(req, res, next) {
-	
+router.get('/hot', function(req, res, next) {	
 	article.query(page,function(err, results, fields){
 		res.send(results);
 	});

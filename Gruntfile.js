@@ -5,22 +5,20 @@ module.exports = function(grunt) {
 
     //获取 package.json 的信息
     pkg: grunt.file.readJSON('package.json'),
-
-    fd:{
+    cfg:{
           path:"public",
           js:"app",
           css:"style"
     },
-
     browserify: {
         options: {
             debug: true,
             extensions: ['.jsx'],
             transform: ['reactify']
         },
-        hello: {
-            src: '<%=fd.path%>/src/jsx/app.jsx',
-            dest: '<%=fd.path%>/js/app.js'
+        build: {
+            src: '<%=cfg.path%>/src/jsx/app.jsx',
+            dest: '<%=cfg.path%>/js/<%=cfg.js%>.js'
         }
     },
     // uglify插件的配置信息
@@ -30,8 +28,8 @@ module.exports = function(grunt) {
         banner: '/*! <%=pkg.name%>.js <%= grunt.template.today("yyyy-mm-dd") %> */\n'
       },
       build: {
-        src: '<%=fd.path%>/dist/js/<%=pkg.name%>.js',
-        dest: '<%=fd.path%>/dist/js/<%=pkg.name%>.min.js'
+        src: '<%=cfg.path%>/dist/js/<%=pkg.name%>.js',
+        dest: '<%=cfg.path%>/dist/js/<%=pkg.name%>.min.js'
       }
     },
 
@@ -42,8 +40,8 @@ module.exports = function(grunt) {
         banner: '/*! <%=pkg.name%>.css <%= grunt.template.today("yyyy-mm-dd") %> */\n'
       },
       build: {
-        src: '<%=fd.path%>/src/css/<%=pkg.name%>.css',
-        dest: '<%=fd.path%>/dist/css/<%=pkg.name%>.min.css'
+        src: '<%=cfg.path%>/src/css/<%=pkg.name%>.css',
+        dest: '<%=cfg.path%>/dist/css/<%=pkg.name%>.min.css'
       }
     },
     //jshint插件的配置信息'
@@ -60,8 +58,8 @@ module.exports = function(grunt) {
       //   dest: 'src/css/<%=pkg.name%>.css'
       // },
       js:{
-        src: '<%=fd.path%>/src/js/*.js',
-        dest: '<%=fd.path%>/dist/js/<%=pkg.name%>.js'
+        src: '<%=cfg.path%>/src/js/*.js',
+        dest: '<%=cfg.path%>/dist/js/<%=pkg.name%>.js'
       }
     },
 
@@ -69,7 +67,7 @@ module.exports = function(grunt) {
     sass: {
         dist: {
             files: {
-                '<%=fd.path%>/src/css/style.css': '<%=fd.path%>/src/scss/style.scss'
+                '<%=cfg.path%>/src/css/<%=cfg.css%>.css': '<%=cfg.path%>/src/scss/style.scss'
             },
             options: {
                 style: 'compressed',
@@ -84,16 +82,16 @@ module.exports = function(grunt) {
           {
             expand: true, 
             flatten: true,
-            src: ['<%=fd.path%>/dist/js/<%=pkg.name%>.min.js'],
-            dest: '<%=fd.path%>/js/',
+            src: ['<%=cfg.path%>/dist/js/<%=pkg.name%>.min.js'],
+            dest: '<%=cfg.path%>/js/',
             filter: 'isFile'
           },         
           //css
           {
             expand: true, 
             flatten: true,
-            src: ['<%=fd.path%>/src/css/style.css'],
-            dest: '<%=fd.path%>/css/', 
+            src: ['<%=cfg.path%>/src/css/style.css'],
+            dest: '<%=cfg.path%>/css/', 
             filter: 'isFile'
           }
         ]
@@ -103,7 +101,7 @@ module.exports = function(grunt) {
     watch: { 
       js: { 
         files: [
-          '<%=fd.path%>/src/js/*.js'
+          '<%=cfg.path%>/src/js/*.js'
         ], 
         tasks: [
           //'jshint',
@@ -115,7 +113,7 @@ module.exports = function(grunt) {
       },
       css:{
         files: [
-          '<%=fd.path%>/src/scss/*.scss'
+          '<%=cfg.path%>/src/scss/*.scss'
         ], 
         tasks: [
           'sass', 
@@ -127,8 +125,8 @@ module.exports = function(grunt) {
       },
       jsx:{
         files:[
-          '<%=fd.path%>/src/jsx/*.jsx',
-          '<%=fd.path%>/src/jsx/components/*.jsx'
+          '<%=cfg.path%>/src/jsx/*.jsx',
+          '<%=cfg.path%>/src/jsx/components/*.jsx'
         ],
         tasks: [
           'browserify'

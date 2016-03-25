@@ -1,15 +1,18 @@
 var React = require('react');
 var marked = require('marked');
-var SideBar = require('./sidebar.jsx');
 
-var CommentContainer = React.createClass({
+var Comment = React.createClass({
 	getInitialState: function() {
 		return {
 			data:[] 
 		};
 	},
-	
-	reload:function(){
+	getDefaultProps: function() {
+		return {
+			id:null
+		};
+	},
+	load:function(){
 		var _this = this;
 		$.get('/comment/'+this.props.id, function(data) {
 		  	if(data.status == 1){
@@ -25,13 +28,13 @@ var CommentContainer = React.createClass({
 		data['article_id'] = this.props.id;
 		$.post('/comment', data, function(data, textStatus, xhr) {
 			if(data.status == 1){
-				_this.reload();
+				_this.load();
 			}
 		},"json");
 	},
 
 	componentDidMount: function() {
-	  this.reload();
+	  this.load();
 	},
 
 	render: function() {
@@ -39,15 +42,14 @@ var CommentContainer = React.createClass({
 			<div className="comment-box">
 				<h3>Comment</h3>
 				<hr />
-				<CommentList data={this.state.data} />
-				<CommentForm onCommentCommit={this.onCommentCommit}  />
+				<List data={this.state.data} />
+				<Form onCommentCommit={this.onCommentCommit}  />
 			</div>
 		);
 	}	
 });
 
-
-var CommentForm = React.createClass({
+var Form = React.createClass({
 	getInitialState: function() {
 		return {
 			name:"",
@@ -84,7 +86,7 @@ var CommentForm = React.createClass({
 	}
 })
 
-var CommentList = React.createClass({
+var List = React.createClass({
 	getDefaultProps: function() {
 		return {
 			data:[]
@@ -93,7 +95,7 @@ var CommentList = React.createClass({
 	render: function() {
 		var comments = this.props.data.map(function(val){
 			return (
-				<Comment data ={val} />
+				<Item data ={val} />
 			);
 		});
 		return (
@@ -104,7 +106,7 @@ var CommentList = React.createClass({
 	}
 });
 
-var Comment = React.createClass({
+var Item = React.createClass({
 	getDefaultProps: function() {
 		return {
 			data:null
@@ -129,88 +131,4 @@ var Comment = React.createClass({
 	}
 });
 
-
-
-var View = React.createClass({
-	rawMarkup:function(){
-		var content = this.props.data.content;
-		var rawMarkup = marked(content,{sanitize:true});
-		return {__html: rawMarkup};
-	},
-	render: function() {
-		var data = this.props.data;
-		return (
-			<div className="article-view">
-				<h2>{data.title}</h2>				
-				<div className="tool-box">
-					<span><i className="icon-clock"></i>{moment((data.create_time*1000)).fromNow()}</span>
-					<span><i className="icon-eye"></i>{data.view_count}</span>
-				</div>
-				<article className="markdown" dangerouslySetInnerHTML={this.rawMarkup()} />
-			</div>
-		);
-	}
-});
-
-var Loadding = React.createClass({
-	render: function() {
-		return (
-			<div >loadding ...</div>
-		);
-	}
-});
-
-var ViewContainer = React.createClass({
-	getInitialState: function() {
-		return {
-			isLoad:false,
-			data:null
-		};
-	},
-	componentDidMount: function() {
-		var _this = this;
-
-		const id = this.props.id;
-		$.get('/view/'+id,function(data) {
-			_this.setState({
-				isLoad:true,
-				data:data
-			});
-		});
-	},
-	render: function() {
-		if (this.state.isLoad) {
-			return (
-					<div className="content pull-left">	
-						<View data = {this.state.data} />
-						<CommentContainer id={this.props.id} />	
-					</div>
-			);
-		}else{
-			return (
-					<div className="content pull-left">	
-						<Loadding />			
-					</div>
-			);
-		}
-		
-		
-	}
-});
-
-var ViewPage = React.createClass({
-	render: function() {
-		var id = this.props.params.id;
-		return (
-			<div className="wrap-container">
-				<div className="content pull-left">
-					<ViewContainer id={id} />
-				</div>
-				<SideBar />
-			</div>
-		);
-	}
-});
-
-
-module.exports = ViewPage;
+module.exports = Comment;
