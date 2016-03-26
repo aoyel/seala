@@ -28,7 +28,7 @@ var Form = React.createClass({
 		$.post('/post', {title: title,content:content}, function(data, textStatus, xhr) {
 			if(data.status == 1){
 				var id = data.data;
-				window.location.href = "/#/view/"+id;
+				window.location.href = "/#";
 			}else{
 				alert("error");
 			}

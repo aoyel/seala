@@ -10,11 +10,11 @@ var Container = React.createClass({
 	render: function() {
 		var data = this.props.data;
 		return (
-			<div className="article-view">
+			<div className="article-view content-block">
 				<h2>{data.title}</h2>				
 				<div className="tool-box">
-					<span><i className="icon-clock"></i>{moment((data.create_time*1000)).fromNow()}</span>
-					<span><i className="icon-eye"></i>{data.view_count}</span>
+					<span><i className='icon icon-calendar' ></i>{moment((data.create_time*1000)).fromNow()}</span>
+					<span><i className='icon icon-eye' ></i>{data.view_count}</span>
 				</div>
 				<article className="markdown" dangerouslySetInnerHTML={this.rawMarkup()} />
 			</div>

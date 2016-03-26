@@ -24,8 +24,7 @@ const App = React.createClass({
 ReactDOM.render(
 	<Router >
 		<Route history={hashHistory} path="/" component={App}>
-			<IndexRoute component={Default}/>			
-			<Route path="/view/:id" component={View}/>
+			<IndexRoute component={Default}/>
 			<Route path="/post" component={Post}/>
 			<Route path="*" component={NotFound}/>
 		</Route>

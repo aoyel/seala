@@ -1,11 +1,33 @@
 var React = require('react');
 var Link = require('react-router').Link
 
-var Search = React.createClass({	
+var Search = React.createClass({
+	getDefaultProps: function() {
+		return {
+			onSearch:null
+		};
+	},
+	getInitialState: function() {
+		return {
+			q:null 
+		};
+	},
+	onSubmit:function(e){
+		this.props.onSearch && this.props.onSearch(this.state.q);
+		this.setState({
+			q:null 
+		});
+		e.preventDefault();	
+	},
+	onChange:function(e){
+		this.setState({
+			q:e.target.value 
+		});
+	},
 	render: function() {
 		return (
-			<form action="{this.props.url}" role='search' className="search-form">
-				<input type="text" placeholder="Search..." className="form-control" />
+			<form onSubmit={this.onSubmit} role='search' className="search-form">
+				<input value={this.state.q} onChange={this.onChange} type="text" placeholder="Search..." className="form-control" />
 			</form>
 		);
 	}
@@ -25,7 +47,7 @@ var Header = React.createClass({
 		    	<div className="wrap-container">
 		    		<Link to="/" className="logo pull-left">{this.props.appName}</Link>
 					<div className="pull-right">
-						<Search url={url} />					
+						<Search onSearch={this.props.onSearch} url={url} />					
 					</div>
 					<div className="clearfix"></div>
 				</div>

@@ -6,7 +6,7 @@ var article = require('../model/article');
 /* GET home page. */
 router.get('/', function(req, res, next) {
 	var page = req.params.page || 0;
-	res.render('index', { title: 'seale'});
+	res.render('index', { title: 'Seala'});
 });
 
 
@@ -33,7 +33,7 @@ router.post('/post', function(req, res, next) {
 
 router.get('/list', function(req, res, next) {
 	var page = req.query.page || 0;
-	var pagesize = req.query.pagesize || 8;
+	var pagesize = req.query.pagesize || 15;
 	var sort = null;
 	var allowSort = ['create_time','comment_count','view_count','like_count'];
 	for(i in allowSort){

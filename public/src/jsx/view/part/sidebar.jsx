@@ -2,9 +2,7 @@ var React = require('react');
 var Link = require('react-router').Link
 var Hot = require('./hot.jsx');
 
-
-
-var SideTitle = React.createClass({
+var Title = React.createClass({
 
 	getDefaultProps: function() {
 		return {
@@ -16,7 +14,6 @@ var SideTitle = React.createClass({
 			<h5>{this.props.title}</h5>
 		);
 	}
-
 });
 
 
@@ -24,8 +21,8 @@ var SideHot = React.createClass({
 	render: function() {
 		return (
 			<div className="side-box">
-				<SideTitle title="热门话题" />
-				<Hot />
+				<Title title="热门话题" />
+				<Hot onItemClick={this.props.onItemClick} />
 			</div>			
 		);
 	}
@@ -35,8 +32,7 @@ var SideQrcode = React.createClass({
 	render: function() {
 		return (
 			<div className="side-box">
-				<SideTitle title="关注我们" />
-				<img src="http://anquan.baidu.com/bbs/static/image/woldy/bl_wx.png" />	
+				<Title title="联系我们" />
 			</div>
 		);
 	}
@@ -46,7 +42,7 @@ var Container = React.createClass({
 	render: function() {
 		return (
 			<div className="sidebar pull-right">
-				<SideHot />
+				<SideHot onItemClick={this.props.onItemClick} />
 				<SideQrcode />
 			</div>
 		);

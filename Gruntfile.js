@@ -126,7 +126,8 @@ module.exports = function(grunt) {
       jsx:{
         files:[
           '<%=cfg.path%>/src/jsx/*.jsx',
-          '<%=cfg.path%>/src/jsx/components/*.jsx'
+          '<%=cfg.path%>/src/jsx/view/*.jsx',
+          '<%=cfg.path%>/src/jsx/view/part/*.jsx'
         ],
         tasks: [
           'browserify'

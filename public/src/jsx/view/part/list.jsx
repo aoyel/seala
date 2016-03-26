@@ -9,6 +9,11 @@ var Article = React.createClass({
 			isDone:false
 		};
 	},
+	getDefaultProps: function() {
+		return {
+			onItemClick:null
+		};
+	},
 	loadData:function(url,page,callback){
 		page = page || 0;
 		$.get(url,{page:page},function(data){
@@ -43,7 +48,7 @@ var Article = React.createClass({
 	render: function() {
 		return (
 			<div className="article-box">
-				<List data={this.state.data} />
+				<List data={this.state.data} onItemClick={this.props.onItemClick} />
 				<Load isDone={this.state.isDone} onLoadMore={this.onLoadMore} />
 			</div>
 		);
@@ -51,13 +56,25 @@ var Article = React.createClass({
 });
 
 var List = React.createClass({
+	getDefaultProps: function() {
+		return {
+			onItemClick:null
+		};
+	},
 	render: function() {
 		var dataset = this.props.data;
 		var content = "";
+		var _this = this;
+		var colors = [
+			'#5fbeaa','#5d9cec','#81c868','#34d3eb','#ffbd4a','#f05050','#4c5667','#7266ba','fb6d9d'
+		];
+		var i = 0;
 		if(dataset.length >= 0){
 			content = dataset.map(function(val){
+				var color = colors[i % colors.length-1];
+				i++;
 				return (
-					<Item data={val} />
+					<Item data={val} color={color} onItemClick={_this.props.onItemClick} />
 				);
 			});	
 		}	
@@ -70,17 +87,24 @@ var List = React.createClass({
 });
 
 var Item = React.createClass({
+	getDefaultProps: function() {
+		return {
+			color:'#5fbeaa'
+		};
+	},
+	onClick:function(e){
+		var target = $(e.target);
+		this.props.onItemClick(target.data('id'),e);
+	},
 	render: function() {
 		var dataset = this.props.data;
 		return (
 			<div className="article">
-				<span className='mid-logo'>{dataset.title.substring(0,1)}</span>
-				<Link target="_blank" className="title" to={`/view/${dataset.id}`}>
+				<span style={{background:this.props.color}} className='mid-logo'>{dataset.title.substring(0,1)}</span>
+				<a href='javascript:;' data-id={dataset.id} className="title" onClick={this.onClick} >
 						{dataset.title}
-				</Link>
-				<time>{moment((dataset.create_time*1000)).fromNow()}</time>
-				<span className='tag'>PHP</span>
-				
+				</a>
+				<time>{moment((dataset.create_time*1000)).fromNow()}</time>				
 				<div className="clearfix"></div>
 			</div> 			
 		);

@@ -1,5 +1,18 @@
+@font-face {
+    font-family: 'pacificoregular';
+    src: url('../font/pacifico-webfont.eot');
+    src: url('../font/pacifico-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../font/pacifico-webfont.woff2') format('woff2'),
+         url('../font/pacifico-webfont.woff') format('woff'),
+         url('../font/pacifico-webfont.ttf') format('truetype'),
+         url('../font/pacifico-webfont.svg#pacificoregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 body{
-	font-family: Lato,Helvetica Neue,Helvetica,Arial,sans-serif;
+	font-family: Helvetica Neue,Helvetica,Arial,"Microsoft Yahei",sans-serif;
 }
 
 a{
@@ -117,10 +130,18 @@ article{
 	margin-right: auto;
 }
 
+@media (max-width: 776px){
+	.wrap-container{
+		width: 100%;
+		padding: 0 .3em;
+	}
+}
+
 .logo{
 	color: white;
 	font-size: 1.6em;
 	text-transform: uppercase;
+	font-family: 'pacificoregular',Helvetica Neue,Helvetica,Arial,sans-serif;
 	&:hover{
 		color: white;
 	}

@@ -14,12 +14,23 @@ var Container = React.createClass({
 });
 
 const Default = React.createClass({
+	getInitialState: function() {
+		return {
+			query:null 
+		};
+	},
+
+	onSearch:function(q){
+		this.setState({
+			query:q 
+		});
+		console.log(q);
+	},
 	render: function() {
-		moment.locale("zh-cn");
 		return (
 			<div>
-				<Header />
-				<Container content={this.props.children} />
+				<Header onSearch={this.onSearch} />
+				<Container query={this.state.query} content={this.props.content} />
 				<Footer />				
 			</div>
 		);

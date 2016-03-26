@@ -22,9 +22,11 @@ var Comment = React.createClass({
 		  	}		
 		});
 	},
-
 	onCommentCommit:function(data){
 		var _this = this;
+		if(!this.props.id){
+			return;			
+		}
 		data['article_id'] = this.props.id;
 		$.post('/comment', data, function(data, textStatus, xhr) {
 			if(data.status == 1){
@@ -32,15 +34,16 @@ var Comment = React.createClass({
 			}
 		},"json");
 	},
-
-	componentDidMount: function() {
-	  this.load();
+	componentDidUpdate: function(prevProps, prevState) {
+		if(this.props.id != prevProps.id){
+			var _this = this;
+			_this.load();
+		}		
 	},
-
 	render: function() {
 		return (
-			<div className="comment-box">
-				<h3>Comment</h3>
+			<div className="comment-box content-block">
+				<h3>评论</h3>
 				<hr />
 				<List data={this.state.data} />
 				<Form onCommentCommit={this.onCommentCommit}  />
@@ -80,7 +83,8 @@ var Form = React.createClass({
 			<form id="comment-post" onSubmit={this.handleSubmit} >
 				<input name="name" value={this.state.name} onChange={this.handleChange} placeholder="请输入您的名称" className="form-control" require="true" type="text" />
 				<input name="email" value={this.state.email} onChange={this.handleChange} placeholder="请输入您的邮箱" className="form-control"  type="email" />
-				<textarea name="content" value={this.state.content} onChange={this.handleChange} placeholder="请输入内容" className="form-control" />				<input type="submit" className="btn btn-default" />
+				<textarea name="content" value={this.state.content} onChange={this.handleChange} placeholder="请输入内容" className="form-control" />				
+				<input type="submit" className="btn btn-default" value="提交评论" />
 			</form>
 		);
 	}
