@@ -206,6 +206,11 @@
 			color: #f00;
 		}
 	}
+	@media (max-width: 776px){
+		.row{
+			margin: 0;
+		}
+	}
 }
 #comment-post{
 	.form-control{
