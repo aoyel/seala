@@ -61,7 +61,10 @@ var Form = React.createClass({
 		};
 	},
 	handleSubmit:function(e){
-		e.preventDefault();		
+		e.preventDefault();
+		if(!this.state.name || !this.state.content){
+			return false;
+		}
 		this.props.onCommentCommit(this.state);
 		var param = {
 			name:"",
