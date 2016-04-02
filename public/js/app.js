@@ -25220,7 +25220,7 @@ ReactDOM.render(
 			React.createElement(Route, {path: "*", component: NotFound})
 		)
 	),
-	document.body
+	document.getElementById("app")
 );
 
 },{"./layout/default.jsx":218,"./view/default.jsx":219,"./view/notfound.jsx":222,"./view/post.jsx":230,"react":214,"react-dom":51,"react-router":79}],218:[function(require,module,exports){
