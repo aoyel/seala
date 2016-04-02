@@ -25220,7 +25220,7 @@ ReactDOM.render(
 			React.createElement(Route, {path: "*", component: NotFound})
 		)
 	),
-	document.getElementById('app')
+	document.body
 );
 
 },{"./layout/default.jsx":218,"./view/default.jsx":219,"./view/notfound.jsx":222,"./view/post.jsx":230,"react":214,"react-dom":51,"react-router":79}],218:[function(require,module,exports){
@@ -25240,21 +25240,31 @@ var Container = React.createClass({displayName: "Container",
 });
 
 const Default = React.createClass({displayName: "Default",
+	childContextTypes:{
+		query:React.PropTypes.string
+	},
+
 	getInitialState: function() {
 		return {
 			query:null 
 		};
-	},
+	},	
 
+	getChildContext: function() {
+	    return {
+	    	query: this.state.query
+	    };
+	},
+	
 	onSearch:function(q){
 		this.setState({
 			query:q 
 		});
-		console.log(q);
 	},
+
 	render: function() {
 		return (
-			React.createElement("div", null, 
+			React.createElement("div", {id: "app"}, 
 				React.createElement(Header, {onSearch: this.onSearch}), 
 				React.createElement(Container, {query: this.state.query, content: this.props.content}), 
 				React.createElement(Footer, null)				
@@ -25291,8 +25301,16 @@ var Container = React.createClass({displayName: "Container",
 			$('body').css('overflow','hidden');
 		}
 	},
-	
-	onItemClick:function(id,event){
+
+	childContextTypes:{
+		showView:React.PropTypes.func
+	},
+	getChildContext: function() {
+	    return {
+	    	showView: this.onShowView
+	    };
+	},
+	onShowView:function(id,event){
 		this.setState({
 			curViewId:id
 		});
@@ -25302,9 +25320,9 @@ var Container = React.createClass({displayName: "Container",
 		return (
 			React.createElement("div", {className: "wrap-container"}, 
 				React.createElement("div", {className: "content pull-left"}, 
-					React.createElement(List, {url: "/list", onItemClick: this.onItemClick})
+					React.createElement(List, {url: "/list"})
 				), 
-				React.createElement(SideBar, {onItemClick: this.onItemClick}), 
+				React.createElement(SideBar, null), 
 				React.createElement(View, {id: this.state.curViewId, active: this.state.isViewActive, toggleActive: this.toggleActive})
 			)
 		);
@@ -25411,6 +25429,7 @@ module.exports = Conntainer;
 var React = require('react');
 var marked = require('marked');
 
+
 var Comment = React.createClass({displayName: "Comment",
 	getInitialState: function() {
 		return {
@@ -25494,7 +25513,10 @@ var Form = React.createClass({displayName: "Form",
 	render: function() {
 		return (
 			React.createElement("form", {id: "comment-post", onSubmit: this.handleSubmit}, 
-				React.createElement("input", {name: "name", value: this.state.name, onChange: this.handleChange, placeholder: "请输入您的名称", className: "form-control", require: "true", type: "text"}), 
+				React.createElement("div", {className: "form-row"}, 
+					React.createElement("input", {name: "name", value: this.state.name, onChange: this.handleChange, placeholder: "请输入您的名称", className: "form-control", require: "true", type: "text"}), 
+					React.createElement("span", null)
+				), 				
 				React.createElement("input", {name: "email", value: this.state.email, onChange: this.handleChange, placeholder: "请输入您的邮箱", className: "form-control", type: "email"}), 
 				React.createElement("textarea", {name: "content", value: this.state.content, onChange: this.handleChange, placeholder: "请输入内容", className: "form-control"}), 				
 				React.createElement("input", {type: "submit", className: "btn btn-default", value: "提交评论"})
@@ -25591,6 +25613,9 @@ var Link = require('react-router').Link
 
 
 var Item = React.createClass({displayName: "Item",
+	contextTypes:{
+		showView:React.PropTypes.func
+	},
 	getDefaultProps: function() {
 		return {
 			data:{}
@@ -25598,7 +25623,7 @@ var Item = React.createClass({displayName: "Item",
 	},
 	onClick:function(e){
 		var toggle = $(e.target);
-		this.props.onItemClick && this.props.onItemClick(toggle.data('id'),e);
+		this.context.showView && this.context.showView(toggle.data('id'),e);
 	},
 	render: function() {
 		var data = this.props.data;
@@ -25613,8 +25638,7 @@ var Item = React.createClass({displayName: "Item",
 var List = React.createClass({displayName: "List",
 	getDefaultProps: function() {
 		return {
-			url:'/list?page=0&pagesize=5&sort=view_count',
-			onItemClick:null
+			url:'/list?page=0&pagesize=5&sort=view_count'			
 		};
 	},
 	getInitialState: function() {
@@ -25641,7 +25665,7 @@ var List = React.createClass({displayName: "List",
 		var dataset = _this.state.data;
 		var content = dataset.map(function(val){
 			return (
-				React.createElement(Item, {data: val, onItemClick: _this.props.onItemClick})
+				React.createElement(Item, {data: val})
 			);
 		});	
 		return (
@@ -25667,29 +25691,41 @@ var Article = React.createClass({displayName: "Article",
 			isDone:false
 		};
 	},
-	getDefaultProps: function() {
-		return {
-			onItemClick:null
-		};
-	},
-	loadData:function(url,page,callback){
+	contextTypes:{		
+		query:React.PropTypes.string
+	},	
+	loadData:function(url,page,query,callback){
 		page = page || 0;
-		$.get(url,{page:page},function(data){
+		$.get(url,{page:page,query:query},function(data){
 			callback && callback(data);
 		},"json");
 	},
 	componentDidMount: function() {
 		var _this = this;
-		_this.loadData(this.props.url,this.state.page,function(data){			
+		let query = this.context.query;
+		_this.loadData(this.props.url,this.state.page,query,function(data){			
 			_this.setState({data:data});
 		});
+	},
+	componentDidUpdate: function(nextProps, nextState,prevContext) {
+		if(prevContext.query != this.context.query){
+			var _this = this;
+			this.setState({
+				page:0 
+			});
+			let query = this.context.query;
+			_this.loadData(this.props.url,this.state.page,query,function(data){			
+				_this.setState({data:data});
+			});
+		}
 	},
 	onLoadMore:function(callback){
 		var _this = this;
 		var dataset = this.state.data;
-		var page = _this.state.page;
+		let page = _this.state.page;
 		_this.setState({page:page + 1});
-		_this.loadData(this.props.url,++page,function(data){
+		let query = this.context.query;
+		_this.loadData(this.props.url,++page,query,function(data){
 			if(data.length > 0){
 				for(i in data){
 					dataset.push(data[i]);
@@ -25706,7 +25742,7 @@ var Article = React.createClass({displayName: "Article",
 	render: function() {
 		return (
 			React.createElement("div", {className: "article-box"}, 
-				React.createElement(List, {data: this.state.data, onItemClick: this.props.onItemClick}), 
+				React.createElement(List, {data: this.state.data}), 
 				React.createElement(Load, {isDone: this.state.isDone, onLoadMore: this.onLoadMore})
 			)
 		);
@@ -25718,7 +25754,7 @@ var List = React.createClass({displayName: "List",
 		return {
 			onItemClick:null
 		};
-	},
+	},	
 	render: function() {
 		var dataset = this.props.data;
 		var content = "";
@@ -25732,7 +25768,7 @@ var List = React.createClass({displayName: "List",
 				var color = colors[i % colors.length-1];
 				i++;
 				return (
-					React.createElement(Item, {data: val, color: color, onItemClick: _this.props.onItemClick})
+					React.createElement(Item, {data: val, color: color})
 				);
 			});	
 		}	
@@ -25750,9 +25786,12 @@ var Item = React.createClass({displayName: "Item",
 			color:'#5fbeaa'
 		};
 	},
+	contextTypes:{
+		showView:React.PropTypes.func
+	},
 	onClick:function(e){
 		var target = $(e.target);
-		this.props.onItemClick(target.data('id'),e);
+		this.context.showView && this.context.showView(target.data('id'),e);
 	},
 	render: function() {
 		var dataset = this.props.data;
@@ -25840,7 +25879,7 @@ var SideHot = React.createClass({displayName: "SideHot",
 		return (
 			React.createElement("div", {className: "side-box"}, 
 				React.createElement(Title, {title: "热门话题"}), 
-				React.createElement(Hot, {onItemClick: this.props.onItemClick})
+				React.createElement(Hot, null)
 			)			
 		);
 	}
@@ -25860,7 +25899,7 @@ var Container = React.createClass({displayName: "Container",
 	render: function() {
 		return (
 			React.createElement("div", {className: "sidebar pull-right"}, 
-				React.createElement(SideHot, {onItemClick: this.props.onItemClick}), 
+				React.createElement(SideHot, null), 
 				React.createElement(SideQrcode, null)
 			)
 		);

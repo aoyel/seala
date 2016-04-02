@@ -7,7 +7,7 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     cfg:{
           path:"public",
-          js:"app",
+          js:"boundle",
           css:"style"
     },
     browserify: {
@@ -18,7 +18,7 @@ module.exports = function(grunt) {
         },
         build: {
             src: '<%=cfg.path%>/src/jsx/app.jsx',
-            dest: '<%=cfg.path%>/js/<%=cfg.js%>.js'
+            dest: '<%=cfg.path%>/js/app.js'
         }
     },
     // uglify插件的配置信息
@@ -28,8 +28,8 @@ module.exports = function(grunt) {
         banner: '/*! <%=pkg.name%>.js <%= grunt.template.today("yyyy-mm-dd") %> */\n'
       },
       build: {
-        src: '<%=cfg.path%>/dist/js/<%=pkg.name%>.js',
-        dest: '<%=cfg.path%>/dist/js/<%=pkg.name%>.min.js'
+        src: '<%=cfg.path%>/dist/js/<%=cfg.js%>.js',
+        dest: '<%=cfg.path%>/dist/js/<%=cfg.js%>.min.js'
       }
     },
 
@@ -59,7 +59,7 @@ module.exports = function(grunt) {
       // },
       js:{
         src: '<%=cfg.path%>/src/js/*.js',
-        dest: '<%=cfg.path%>/dist/js/<%=pkg.name%>.js'
+        dest: '<%=cfg.path%>/dist/js/<%=cfg.js%>.js'
       }
     },
 
@@ -82,7 +82,7 @@ module.exports = function(grunt) {
           {
             expand: true, 
             flatten: true,
-            src: ['<%=cfg.path%>/dist/js/<%=pkg.name%>.min.js'],
+            src: ['<%=cfg.path%>/dist/js/<%=cfg.js%>.js'],
             dest: '<%=cfg.path%>/js/',
             filter: 'isFile'
           },         
@@ -117,7 +117,7 @@ module.exports = function(grunt) {
         ], 
         tasks: [
           'sass', 
-          'concat',          
+          // 'concat',          
           //'cssmin',
           'copy'
         ], 

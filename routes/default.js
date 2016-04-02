@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var article = require('../model/article');
+var _ = require("lodash");
+var model = require('../model/model.js');
 
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	var page = req.params.page || 0;
 	res.render('index', { title: 'Seala'});
 });
 
@@ -31,25 +32,28 @@ router.post('/post', function(req, res, next) {
   	})
 });
 
-router.get('/list', function(req, res, next) {
+router.get('/list', function(req, res, next) {	
 	var page = req.query.page || 0;
-	var pagesize = req.query.pagesize || 15;
+	var pagesize = req.query.pagesize || 15;	
 	var sort = null;
 	var allowSort = ['create_time','comment_count','view_count','like_count'];
-	for(i in allowSort){
-		if(req.query.sort == allowSort[i]){
-			sort = req.query.sort;
-			break;
-		}
+	var orderway = "DESC";
+	if(req.query.hasOwnProperty("sort") && (_.indexOf(allowSort,req.query.sort) != -1)){
+		sort = req.query.sort;
+	}else{
+		sort = "create_time";
 	}
-	article.query(page,pagesize,sort,function(err, results, fields){
-		res.send(results);
-	});
-});
-
-router.get('/hot', function(req, res, next) {	
-	article.query(page,function(err, results, fields){
-		res.send(results);
+	var map = {};
+	var q = req.query.query || "";
+	if(q){
+		map['title'] = ["like","%" + q + "%"];
+	}
+	model("article").where(map).order(sort,orderway).limit(page*pagesize,pagesize).find(function(err,data){		
+		if(err){
+			res.send({});
+		}else{
+			res.send(data);
+		}
 	});
 });
 

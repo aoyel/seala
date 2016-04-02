@@ -1,6 +1,7 @@
 var React = require('react');
 var marked = require('marked');
 
+
 var Comment = React.createClass({
 	getInitialState: function() {
 		return {
@@ -84,7 +85,10 @@ var Form = React.createClass({
 	render: function() {
 		return (
 			<form id="comment-post" onSubmit={this.handleSubmit} >
-				<input name="name" value={this.state.name} onChange={this.handleChange} placeholder="请输入您的名称" className="form-control" require="true" type="text" />
+				<div className="form-row">
+					<input name="name"  value={this.state.name} onChange={this.handleChange} placeholder="请输入您的名称" className="form-control" require="true" type="text" />
+					<span></span>
+				</div>				
 				<input name="email" value={this.state.email} onChange={this.handleChange} placeholder="请输入您的邮箱" className="form-control"  type="email" />
 				<textarea name="content" value={this.state.content} onChange={this.handleChange} placeholder="请输入内容" className="form-control" />				
 				<input type="submit" className="btn btn-default" value="提交评论" />

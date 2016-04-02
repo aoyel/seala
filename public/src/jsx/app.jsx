@@ -29,5 +29,5 @@ ReactDOM.render(
 			<Route path="*" component={NotFound}/>
 		</Route>
 	</Router>,
-	document.getElementById('app')
+	document.body
 );

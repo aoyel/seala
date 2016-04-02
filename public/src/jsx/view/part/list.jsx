@@ -9,29 +9,41 @@ var Article = React.createClass({
 			isDone:false
 		};
 	},
-	getDefaultProps: function() {
-		return {
-			onItemClick:null
-		};
-	},
-	loadData:function(url,page,callback){
+	contextTypes:{		
+		query:React.PropTypes.string
+	},	
+	loadData:function(url,page,query,callback){
 		page = page || 0;
-		$.get(url,{page:page},function(data){
+		$.get(url,{page:page,query:query},function(data){
 			callback && callback(data);
 		},"json");
 	},
 	componentDidMount: function() {
 		var _this = this;
-		_this.loadData(this.props.url,this.state.page,function(data){			
+		let query = this.context.query;
+		_this.loadData(this.props.url,this.state.page,query,function(data){			
 			_this.setState({data:data});
 		});
+	},
+	componentDidUpdate: function(nextProps, nextState,prevContext) {
+		if(prevContext.query != this.context.query){
+			var _this = this;
+			this.setState({
+				page:0 
+			});
+			let query = this.context.query;
+			_this.loadData(this.props.url,this.state.page,query,function(data){			
+				_this.setState({data:data});
+			});
+		}
 	},
 	onLoadMore:function(callback){
 		var _this = this;
 		var dataset = this.state.data;
-		var page = _this.state.page;
+		let page = _this.state.page;
 		_this.setState({page:page + 1});
-		_this.loadData(this.props.url,++page,function(data){
+		let query = this.context.query;
+		_this.loadData(this.props.url,++page,query,function(data){
 			if(data.length > 0){
 				for(i in data){
 					dataset.push(data[i]);
@@ -48,7 +60,7 @@ var Article = React.createClass({
 	render: function() {
 		return (
 			<div className="article-box">
-				<List data={this.state.data} onItemClick={this.props.onItemClick} />
+				<List data={this.state.data} />
 				<Load isDone={this.state.isDone} onLoadMore={this.onLoadMore} />
 			</div>
 		);
@@ -60,7 +72,7 @@ var List = React.createClass({
 		return {
 			onItemClick:null
 		};
-	},
+	},	
 	render: function() {
 		var dataset = this.props.data;
 		var content = "";
@@ -74,7 +86,7 @@ var List = React.createClass({
 				var color = colors[i % colors.length-1];
 				i++;
 				return (
-					<Item data={val} color={color} onItemClick={_this.props.onItemClick} />
+					<Item data={val} color={color} />
 				);
 			});	
 		}	
@@ -92,9 +104,12 @@ var Item = React.createClass({
 			color:'#5fbeaa'
 		};
 	},
+	contextTypes:{
+		showView:React.PropTypes.func
+	},
 	onClick:function(e){
 		var target = $(e.target);
-		this.props.onItemClick(target.data('id'),e);
+		this.context.showView && this.context.showView(target.data('id'),e);
 	},
 	render: function() {
 		var dataset = this.props.data;

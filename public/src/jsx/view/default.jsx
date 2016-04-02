@@ -23,8 +23,16 @@ var Container = React.createClass({
 			$('body').css('overflow','hidden');
 		}
 	},
-	
-	onItemClick:function(id,event){
+
+	childContextTypes:{
+		showView:React.PropTypes.func
+	},
+	getChildContext: function() {
+	    return {
+	    	showView: this.onShowView
+	    };
+	},
+	onShowView:function(id,event){
 		this.setState({
 			curViewId:id
 		});
@@ -34,9 +42,9 @@ var Container = React.createClass({
 		return (
 			<div className="wrap-container">
 				<div className="content pull-left">
-					<List url="/list" onItemClick={this.onItemClick} />
+					<List url="/list" />
 				</div>
-				<SideBar onItemClick={this.onItemClick} />
+				<SideBar/>
 				<View id={this.state.curViewId} active={this.state.isViewActive} toggleActive={this.toggleActive} />
 			</div>
 		);

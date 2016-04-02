@@ -1,14 +1,21 @@
 
 var mysql = require('../helper/mysql');
 
-function query(page,pagesize,sort,callback){
+function query(q,page,pagesize,sort,callback){
+	q = q || null;
 	sort = sort || "create_time";
 	page = page || 0;
 	pageSize = pagesize || 12;
 	var offset = parseInt(page) * pageSize;
 	callback = callback || null;
+	
+	var sql = "SELECT id,title,create_time FROM `article` WHERE `is_delete` = ? ORDER BY `{2}` DESC LIMIT {0},{1}".format(offset,pageSize,sort);
+	if(q){
+		sql = "SELECT id,title,create_time FROM `article` WHERE `is_delete` = ? AND `title` LIKE ? ORDER BY `{2}` DESC LIMIT {0},{1}".format(offset,pageSize,sort);
+	}
+
 	var query = mysql.query({
-				  sql: "SELECT id,title,description,create_time FROM `article` WHERE `is_delete` = ? ORDER BY `{2}` DESC LIMIT {0},{1}".format(offset,pageSize,sort),
+				  sql: sql,
 				  timeout: 5000,
 				  values: [0]
 				},callback);
@@ -16,7 +23,7 @@ function query(page,pagesize,sort,callback){
 }
 exports.query = query;
 
-function find(id,callback){	
+function find(id,callback){
 	callback = callback || null;
 	var query = mysql.query({
 				  sql: "SELECT * FROM `article` WHERE `id` = ?",
@@ -56,7 +63,6 @@ function comment(article_id,name,email,content,callback){
 	var query = mysql.query("INSERT INTO `comment` SET ?",data,callback);
 }
 exports.comment = comment;
-
 
 function loadComment(id,page,callback){
 	page = page || 0; 

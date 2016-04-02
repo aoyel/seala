@@ -22,7 +22,7 @@ var SideHot = React.createClass({
 		return (
 			<div className="side-box">
 				<Title title="热门话题" />
-				<Hot onItemClick={this.props.onItemClick} />
+				<Hot />
 			</div>			
 		);
 	}
@@ -42,7 +42,7 @@ var Container = React.createClass({
 	render: function() {
 		return (
 			<div className="sidebar pull-right">
-				<SideHot onItemClick={this.props.onItemClick} />
+				<SideHot/>
 				<SideQrcode />
 			</div>
 		);

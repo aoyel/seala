@@ -14,21 +14,31 @@ var Container = React.createClass({
 });
 
 const Default = React.createClass({
+	childContextTypes:{
+		query:React.PropTypes.string
+	},
+
 	getInitialState: function() {
 		return {
 			query:null 
 		};
-	},
+	},	
 
+	getChildContext: function() {
+	    return {
+	    	query: this.state.query
+	    };
+	},
+	
 	onSearch:function(q){
 		this.setState({
 			query:q 
 		});
-		console.log(q);
 	},
+
 	render: function() {
 		return (
-			<div>
+			<div id='app'>
 				<Header onSearch={this.onSearch} />
 				<Container query={this.state.query} content={this.props.content} />
 				<Footer />				

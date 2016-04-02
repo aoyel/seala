@@ -3,6 +3,9 @@ var Link = require('react-router').Link
 
 
 var Item = React.createClass({
+	contextTypes:{
+		showView:React.PropTypes.func
+	},
 	getDefaultProps: function() {
 		return {
 			data:{}
@@ -10,7 +13,7 @@ var Item = React.createClass({
 	},
 	onClick:function(e){
 		var toggle = $(e.target);
-		this.props.onItemClick && this.props.onItemClick(toggle.data('id'),e);
+		this.context.showView && this.context.showView(toggle.data('id'),e);
 	},
 	render: function() {
 		var data = this.props.data;
@@ -25,8 +28,7 @@ var Item = React.createClass({
 var List = React.createClass({
 	getDefaultProps: function() {
 		return {
-			url:'/list?page=0&pagesize=5&sort=view_count',
-			onItemClick:null
+			url:'/list?page=0&pagesize=5&sort=view_count'			
 		};
 	},
 	getInitialState: function() {
@@ -53,7 +55,7 @@ var List = React.createClass({
 		var dataset = _this.state.data;
 		var content = dataset.map(function(val){
 			return (
-				<Item data={val} onItemClick={_this.props.onItemClick} />
+				<Item data={val}/>
 			);
 		});	
 		return (
