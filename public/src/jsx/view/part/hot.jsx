@@ -28,7 +28,7 @@ var Item = React.createClass({
 var List = React.createClass({
 	getDefaultProps: function() {
 		return {
-			url:'/list?page=0&pagesize=5&sort=view_count'			
+			url:'/list?page=0&pagesize=8&sort=view_count'			
 		};
 	},
 	getInitialState: function() {

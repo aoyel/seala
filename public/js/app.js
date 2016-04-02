@@ -25638,7 +25638,7 @@ var Item = React.createClass({displayName: "Item",
 var List = React.createClass({displayName: "List",
 	getDefaultProps: function() {
 		return {
-			url:'/list?page=0&pagesize=5&sort=view_count'			
+			url:'/list?page=0&pagesize=8&sort=view_count'			
 		};
 	},
 	getInitialState: function() {
@@ -25765,7 +25765,7 @@ var List = React.createClass({displayName: "List",
 		var i = 0;
 		if(dataset.length >= 0){
 			content = dataset.map(function(val){
-				var color = colors[i % colors.length-1];
+				var color = colors[i % colors.length - 1];
 				i++;
 				return (
 					React.createElement(Item, {data: val, color: color})
@@ -25797,7 +25797,14 @@ var Item = React.createClass({displayName: "Item",
 		var dataset = this.props.data;
 		return (
 			React.createElement("div", {className: "article"}, 
-				React.createElement("span", {style: {background:this.props.color}, className: "mid-logo"}, dataset.title.substring(0,1)), 
+				React.createElement("span", {style: {background:this.props.color}, className: "mid-logo"}, 
+					React.createElement("em", {className: "baga-title"}, 
+						dataset.title.substring(0,1)
+					), 
+					React.createElement("em", {"data-month": moment((dataset.create_time*1000)).format('M'), className: "baga-time"}, 
+						moment((dataset.create_time*1000)).format("D")
+					)
+				), 
 				React.createElement("a", {href: "javascript:;", "data-id": dataset.id, className: "title", onClick: this.onClick}, 
 						dataset.title
 				), 
@@ -25874,22 +25881,32 @@ var Title = React.createClass({displayName: "Title",
 });
 
 
-var SideHot = React.createClass({displayName: "SideHot",
+var Article = React.createClass({displayName: "Article",
 	render: function() {
 		return (
 			React.createElement("div", {className: "side-box"}, 
-				React.createElement(Title, {title: "热门话题"}), 
+				React.createElement(Title, {title: "热门文章"}), 
 				React.createElement(Hot, null)
 			)			
 		);
 	}
 });
 
-var SideQrcode = React.createClass({displayName: "SideQrcode",
+
+
+
+var Qrcode = React.createClass({displayName: "Qrcode",
 	render: function() {
 		return (
 			React.createElement("div", {className: "side-box"}, 
-				React.createElement(Title, {title: "联系我们"})
+				React.createElement(Title, {title: "联系我们"}), 				
+				React.createElement("img", {src: "/images/qrcode.png"}), 
+				React.createElement("br", null), 
+				React.createElement("br", null), 
+				React.createElement("div", {className: "text-center"}, 
+					React.createElement("iframe", {src: "https://ghbtns.com/github-btn.html?user=aoyel&repo=seala&type=star&count=true", width: "80px", height: "20px"}), 
+					React.createElement("iframe", {src: "https://ghbtns.com/github-btn.html?user=aoyel&repo=seala&type=fork&count=true", width: "80px", height: "20px"})
+				)				
 			)
 		);
 	}
@@ -25899,8 +25916,9 @@ var Container = React.createClass({displayName: "Container",
 	render: function() {
 		return (
 			React.createElement("div", {className: "sidebar pull-right"}, 
-				React.createElement(SideHot, null), 
-				React.createElement(SideQrcode, null)
+				
+				React.createElement(Article, null), 				
+				React.createElement(Qrcode, null)
 			)
 		);
 	}	

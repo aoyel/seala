@@ -17,22 +17,32 @@ var Title = React.createClass({
 });
 
 
-var SideHot = React.createClass({
+var Article = React.createClass({
 	render: function() {
 		return (
 			<div className="side-box">
-				<Title title="热门话题" />
+				<Title title="热门文章" />
 				<Hot />
 			</div>			
 		);
 	}
 });
 
-var SideQrcode = React.createClass({
+
+
+
+var Qrcode = React.createClass({
 	render: function() {
 		return (
 			<div className="side-box">
-				<Title title="联系我们" />
+				<Title title="联系我们" />				
+				<img src="/images/qrcode.png" />
+				<br />
+				<br />
+				<div className="text-center">
+					<iframe src="https://ghbtns.com/github-btn.html?user=aoyel&repo=seala&type=star&count=true" width="80px" height="20px"></iframe>
+					<iframe src="https://ghbtns.com/github-btn.html?user=aoyel&repo=seala&type=fork&count=true" width="80px" height="20px"></iframe>
+				</div>				
 			</div>
 		);
 	}
@@ -42,8 +52,9 @@ var Container = React.createClass({
 	render: function() {
 		return (
 			<div className="sidebar pull-right">
-				<SideHot/>
-				<SideQrcode />
+				
+				<Article />				
+				<Qrcode />
 			</div>
 		);
 	}	

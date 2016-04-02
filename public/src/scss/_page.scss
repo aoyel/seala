@@ -28,6 +28,10 @@
 }
 .article{
 	padding: 1em 0;
+	word-break: keep-all;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 	border-bottom: 1px dashed #fafafa;
 
 	.mid-logo{
@@ -42,10 +46,23 @@
 		margin-right: .5em;
 		font-size: .86em;
 		text-transform: uppercase;
+
+		em{
+			font-style: normal;
+		}
+	}
+
+	.baga-title{
+		display: block;
+	}
+
+	.baga-time{
+		display: none;
 	}
 	.title{
 		font-size: 1.2em;
 		color: $default_color;
+		
 		i{
 			margin-right: .3em;
 			opacity: .8;
@@ -87,7 +104,18 @@
 	}
 
 	@media (max-width: 776px){
-		.tag{
+		.mid-logo{
+			width: 25px;
+			height: 25px;
+			line-height: 25px;
+		}
+		.baga-title{
+			display: none;
+		}
+		.baga-time{
+			display: block;
+		}
+		.tag,time{
 			display: none;
 		}
 	}
@@ -106,6 +134,10 @@
 		padding: .5em 0;
 	}
 
+	img{
+		max-width: 100%;
+	}
+
 	.btn{
 		display: block;
 		border-radius: 0;
@@ -115,24 +147,30 @@
 		font-size: 1.1em;
 	}
 
+	iframe{
+		border:none;
+		display: inline-block;
+	}
+
 	ul{
 		list-style: none;
 		padding: 0;
 		margin: 0;
 
 		li{
-				border-bottom: 1px solid $gray;						
+			border-bottom: 1px solid #f8f8f8;
+			word-break: keep-all;
+		    white-space: nowrap;
+		    overflow: hidden;
+		    text-overflow: ellipsis;				
 		}
 		a{
-			font-size: .88em;
 			line-height: 1.6em;
 			color: $default_color;
-			padding: .5em 0 .5em .5em;
+			padding: .5em 0 .5em 0;
 			display: block;
-			border-left: 2px solid transparent;		
 			&:hover{
-				color: $blue;
-				border-color: $blue;
+				color: $blue;				
 			}
 		}
 	}

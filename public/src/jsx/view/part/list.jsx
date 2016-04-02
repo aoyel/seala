@@ -83,7 +83,7 @@ var List = React.createClass({
 		var i = 0;
 		if(dataset.length >= 0){
 			content = dataset.map(function(val){
-				var color = colors[i % colors.length-1];
+				var color = colors[i % colors.length - 1];
 				i++;
 				return (
 					<Item data={val} color={color} />
@@ -115,7 +115,14 @@ var Item = React.createClass({
 		var dataset = this.props.data;
 		return (
 			<div className="article">
-				<span style={{background:this.props.color}} className='mid-logo'>{dataset.title.substring(0,1)}</span>
+				<span style={{background:this.props.color}} className='mid-logo'>
+					<em className="baga-title">
+						{dataset.title.substring(0,1)}
+					</em>
+					<em data-month={moment((dataset.create_time*1000)).format('M')} className="baga-time">
+						{moment((dataset.create_time*1000)).format("D")}
+					</em>
+				</span>
 				<a href='javascript:;' data-id={dataset.id} className="title" onClick={this.onClick} >
 						{dataset.title}
 				</a>
