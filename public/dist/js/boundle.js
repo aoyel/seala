@@ -145,7 +145,7 @@ function notify(content,type,_callback){
     var _left = ($(window).width() - box.width()) / 2;
     var _top = parseInt(($(window).height() - box.height()) / 2);
     box.hide();
-    box.css({
+    box.css({ 
         "left": _left,
         "top": _top
     }).fadeIn();
