@@ -24391,13 +24391,15 @@ module.exports = List;
 
 },{"react":213,"react-router":78}],225:[function(require,module,exports){
 var React = require('react');
-var Link = require('react-router').Link
+var Link = require('react-router').Link;
+var Loadding = require('./load.jsx');
 
 var Article = React.createClass({displayName: "Article",
 	getInitialState: function() { 
 		return {
 			page:0,			//
 			data:[],			// article dataset
+			isLoad:false,
 			isDone:false
 		};
 	},
@@ -24414,7 +24416,7 @@ var Article = React.createClass({displayName: "Article",
 		var _this = this;
 		var query = this.context.query;
 		_this.loadData(this.props.url,this.state.page,query,function(data){			
-			_this.setState({data:data});
+			_this.setState({data:data,isLoad:true});
 		});
 	},
 	componentDidUpdate: function(nextProps, nextState,prevContext) {
@@ -24450,9 +24452,15 @@ var Article = React.createClass({displayName: "Article",
 		});
 	},
 	render: function() {
+		var component = null;
+		if (this.state.isLoad) {
+			component = React.createElement(List, {data: this.state.data});
+		}else{
+			component = React.createElement(Loadding, null)
+		}
 		return (
 			React.createElement("div", {className: "article-box"}, 
-				React.createElement(List, {data: this.state.data}), 
+				component, 
 				React.createElement(Load, {isDone: this.state.isDone, onLoadMore: this.onLoadMore})
 			)
 		);
@@ -24556,14 +24564,17 @@ var Load = React.createClass({displayName: "Load",
 
 module.exports = Article;
 
-},{"react":213,"react-router":78}],226:[function(require,module,exports){
+},{"./load.jsx":226,"react":213,"react-router":78}],226:[function(require,module,exports){
 var React = require('react');
 
 var Container = React.createClass({displayName: "Container",
 	render: function() {
 		return (
 			React.createElement("div", {className: "loadding"}, 
-				"Loadding ..."
+				React.createElement("div", {className: "spinner"}, 
+					React.createElement("div", {className: "double-bounce1"}), 
+					React.createElement("div", {className: "double-bounce2"})
+				)
 			)
 		);
 	}
@@ -24668,7 +24679,7 @@ var Container = React.createClass({displayName: "Container",
 				_this.setState({
 					isLoad:true,			
 					data:data
-				});
+				});				
 			});
 		}		
 	},

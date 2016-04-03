@@ -1,11 +1,13 @@
 var React = require('react');
-var Link = require('react-router').Link
+var Link = require('react-router').Link;
+var Loadding = require('./load.jsx');
 
 var Article = React.createClass({
 	getInitialState: function() { 
 		return {
 			page:0,			//
 			data:[],			// article dataset
+			isLoad:false,
 			isDone:false
 		};
 	},
@@ -22,7 +24,7 @@ var Article = React.createClass({
 		var _this = this;
 		var query = this.context.query;
 		_this.loadData(this.props.url,this.state.page,query,function(data){			
-			_this.setState({data:data});
+			_this.setState({data:data,isLoad:true});
 		});
 	},
 	componentDidUpdate: function(nextProps, nextState,prevContext) {
@@ -58,9 +60,15 @@ var Article = React.createClass({
 		});
 	},
 	render: function() {
+		var component = null;
+		if (this.state.isLoad) {
+			component = <List data={this.state.data} />;
+		}else{
+			component = <Loadding />
+		}
 		return (
 			<div className="article-box">
-				<List data={this.state.data} />
+				{component}
 				<Load isDone={this.state.isDone} onLoadMore={this.onLoadMore} />
 			</div>
 		);

@@ -29,7 +29,7 @@ var Container = React.createClass({
 				_this.setState({
 					isLoad:true,			
 					data:data
-				});
+				});				
 			});
 		}		
 	},
