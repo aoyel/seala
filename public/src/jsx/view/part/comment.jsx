@@ -1,5 +1,5 @@
 var React = require('react');
-var marked = require('marked');
+
 
 
 var Comment = React.createClass({

@@ -13,8 +13,7 @@ var hashHistory = ReactRouter.hashHistory;
 
 
 const App = React.createClass({
-	render: function() {
-		moment.locale("zh-cn");
+	render: function() {		
 		return (
 			<Layout content={this.props.children} />
 		);

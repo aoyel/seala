@@ -20,7 +20,7 @@ var Article = React.createClass({
 	},
 	componentDidMount: function() {
 		var _this = this;
-		let query = this.context.query;
+		var query = this.context.query;
 		_this.loadData(this.props.url,this.state.page,query,function(data){			
 			_this.setState({data:data});
 		});
@@ -31,7 +31,7 @@ var Article = React.createClass({
 			this.setState({
 				page:0 
 			});
-			let query = this.context.query;
+			var query = this.context.query;
 			_this.loadData(this.props.url,this.state.page,query,function(data){			
 				_this.setState({data:data});
 			});
@@ -40,9 +40,9 @@ var Article = React.createClass({
 	onLoadMore:function(callback){
 		var _this = this;
 		var dataset = this.state.data;
-		let page = _this.state.page;
+		var page = _this.state.page;
 		_this.setState({page:page + 1});
-		let query = this.context.query;
+		var query = this.context.query;
 		_this.loadData(this.props.url,++page,query,function(data){
 			if(data.length > 0){
 				for(i in data){

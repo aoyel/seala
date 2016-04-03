@@ -28,8 +28,8 @@ module.exports = function(grunt) {
         banner: '/*! <%=pkg.name%>.js <%= grunt.template.today("yyyy-mm-dd") %> */\n'
       },
       build: {
-        src: '<%=cfg.path%>/dist/js/<%=cfg.js%>.js',
-        dest: '<%=cfg.path%>/dist/js/<%=cfg.js%>.min.js'
+        src: '<%=cfg.path%>/js/app.js',
+        dest: '<%=cfg.path%>/js/app.min.js'
       }
     },
 
@@ -130,7 +130,8 @@ module.exports = function(grunt) {
           '<%=cfg.path%>/src/jsx/view/part/*.jsx'
         ],
         tasks: [
-          'browserify'
+          'browserify',
+          'uglify',
         ], 
         options: { spawn: false}
       }
@@ -153,10 +154,11 @@ module.exports = function(grunt) {
     'sass',
     'concat',
     //'jshint',
-    'uglify', 
+   
     //'cssmin',
     'copy',
     'browserify',
+     'uglify', 
     'watch'
   ]);
 };
