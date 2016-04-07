@@ -3,7 +3,7 @@ var Content = require('./content.jsx');
 var Comment = require('./comment.jsx');
 var Loadding = require('./load.jsx');
 
-var Container = React.createClass({
+var View = React.createClass({
 	getDefaultProps: function() {
 		return {
 			active:false,
@@ -28,7 +28,7 @@ var Container = React.createClass({
 			$.get('/view/'+id,function(data) {
 				_this.setState({
 					isLoad:true,			
-					data:data
+					data:data.data
 				});				
 			});
 		}		
@@ -66,4 +66,4 @@ var Container = React.createClass({
 	}
 });
 
-module.exports = Container;
+module.exports = View;

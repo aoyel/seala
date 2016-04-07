@@ -21,10 +21,12 @@ var Article = React.createClass({
 		},"json");
 	},
 	componentDidMount: function() {
-		var _this = this;
+		var _this = this;		
 		var query = this.context.query;
 		_this.loadData(this.props.url,this.state.page,query,function(data){			
-			_this.setState({data:data,isLoad:true});
+			if(data.status == 1){
+				_this.setState({data:data.data,isLoad:true});
+			}
 		});
 	},
 	componentDidUpdate: function(nextProps, nextState,prevContext) {
@@ -35,7 +37,9 @@ var Article = React.createClass({
 			});
 			var query = this.context.query;
 			_this.loadData(this.props.url,this.state.page,query,function(data){			
-				_this.setState({data:data});
+				if(data.status == 1){
+					_this.setState({data:data.data,isLoad:true});
+				}
 			});
 		}
 	},
@@ -46,6 +50,12 @@ var Article = React.createClass({
 		_this.setState({page:page + 1});
 		var query = this.context.query;
 		_this.loadData(this.props.url,++page,query,function(data){
+			if(data.status != 1){
+				_this.setState({
+					isDone:true 
+				});
+				return;
+			}
 			if(data.length > 0){
 				for(i in data){
 					dataset.push(data[i]);
@@ -89,6 +99,8 @@ var List = React.createClass({
 			'#5fbeaa','#5d9cec','#81c868','#34d3eb','#ffbd4a','#f05050','#4c5667','#7266ba','fb6d9d'
 		];
 		var i = 0;
+		
+
 		if(dataset.length >= 0){
 			content = dataset.map(function(val){
 				var color = colors[i % colors.length - 1];
@@ -120,21 +132,21 @@ var Item = React.createClass({
 		this.context.showView && this.context.showView(target.data('id'),e);
 	},
 	render: function() {
-		var dataset = this.props.data;
+		var data = this.props.data;		
 		return (
 			<div className="article">
 				<span style={{background:this.props.color}} className='mid-logo'>
 					<em className="baga-title">
-						{dataset.title.substring(0,1)}
+						{data.title.substring(0,1)}
 					</em>
-					<em data-month={moment((dataset.create_time*1000)).format('M')} className="baga-time">
-						{moment((dataset.create_time*1000)).format("D")}
+					<em data-month={moment(Date.parse(data.create_at)).format('M')} className="baga-time">
+						{moment(Date.parse(data.create_at)).format("D")}
 					</em>
 				</span>
-				<a href='javascript:;' data-id={dataset.id} className="title" onClick={this.onClick} >
-						{dataset.title}
+				<a href='javascript:;' data-id={data.id} className="title" onClick={this.onClick} >
+						{data.title}
 				</a>
-				<time>{moment((dataset.create_time*1000)).fromNow()}</time>				
+				<time>{moment(Date.parse(data.create_at)).fromNow()}</time>				
 				<div className="clearfix"></div>
 			</div> 			
 		);

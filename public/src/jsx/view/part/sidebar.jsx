@@ -48,7 +48,7 @@ var Qrcode = React.createClass({
 	}
 });
 
-var Container = React.createClass({
+var Sidebar = React.createClass({
 	render: function() {
 		return (
 			<div className="sidebar pull-right">
@@ -60,4 +60,4 @@ var Container = React.createClass({
 	}	
 });
 
-module.exports = Container;
+module.exports = Sidebar;

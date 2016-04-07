@@ -24153,7 +24153,7 @@ var Comment = React.createClass({displayName: "Comment",
 	},
 	load:function(){
 		var _this = this;
-		$.get('/comment/'+this.props.id, function(data) {
+		$.get('/comment/'+this.props.id, function(data) {			
 		  	if(data.status == 1){
 		  		_this.setState({
 					data:data.data
@@ -24267,12 +24267,12 @@ var Item = React.createClass({displayName: "Item",
 		return {__html: rawMarkup};
 	},
 	render: function() {
-		var dataset = this.props.data;
+		var data = this.props.data;
 		return (
 			React.createElement("div", {className: "comment"}, 
 				React.createElement("strong", {className: "author"}, 
-					dataset.name, 
-					React.createElement("time", null, moment((dataset.create_time*1000)).fromNow())
+					data.name, 
+					React.createElement("time", null, moment(Date.parse(data.create_at)).fromNow())
 				), 
 				React.createElement("div", {dangerouslySetInnerHTML: this.rawMarkup()})
 			)
@@ -24286,11 +24286,11 @@ module.exports = Comment;
 var React = require('react');
 
 
-var Container = React.createClass({displayName: "Container",
+var Content = React.createClass({displayName: "Content",
 	rawMarkup:function(){
 		var content = this.props.data.content;
 		var rawMarkup = marked(content,{sanitize:true});
-		return {__html: rawMarkup};
+		return {__html: content};
 	},
 	render: function() {
 		var data = this.props.data;
@@ -24298,7 +24298,7 @@ var Container = React.createClass({displayName: "Container",
 			React.createElement("div", {className: "article-view content-block"}, 
 				React.createElement("h2", null, data.title), 				
 				React.createElement("div", {className: "tool-box"}, 
-					React.createElement("span", null, React.createElement("i", {className: "icon icon-calendar"}), moment((data.create_time*1000)).fromNow()), 
+					React.createElement("span", null, React.createElement("i", {className: "icon icon-calendar"}), moment(Date.parse(data.create_at)).fromNow()), 
 					React.createElement("span", null, React.createElement("i", {className: "icon icon-eye"}), data.view_count)
 				), 
 				React.createElement("article", {className: "markdown", dangerouslySetInnerHTML: this.rawMarkup()})
@@ -24315,7 +24315,7 @@ var Loadding = React.createClass({displayName: "Loadding",
 	}
 });
 
-module.exports = Container;
+module.exports = Content;
 
 },{"react":213}],224:[function(require,module,exports){
 var React = require('react');
@@ -24364,15 +24364,17 @@ var List = React.createClass({displayName: "List",
 	componentDidMount: function() {
 		var _this = this;
 		_this.load(this.props.url, function(data) {
-			_this.setState({
-				data: data
-			});
+			if(data.status == 1){
+				_this.setState({
+					data: data.data
+				});
+			}			
 		});
 	},
 
 	render: function() {
 		var _this = this;
-		var dataset = _this.state.data;
+		var dataset = _this.state.data;		
 		var content = dataset.map(function(val){
 			return (
 				React.createElement(Item, {data: val})
@@ -24413,10 +24415,12 @@ var Article = React.createClass({displayName: "Article",
 		},"json");
 	},
 	componentDidMount: function() {
-		var _this = this;
+		var _this = this;		
 		var query = this.context.query;
 		_this.loadData(this.props.url,this.state.page,query,function(data){			
-			_this.setState({data:data,isLoad:true});
+			if(data.status == 1){
+				_this.setState({data:data.data,isLoad:true});
+			}
 		});
 	},
 	componentDidUpdate: function(nextProps, nextState,prevContext) {
@@ -24427,7 +24431,9 @@ var Article = React.createClass({displayName: "Article",
 			});
 			var query = this.context.query;
 			_this.loadData(this.props.url,this.state.page,query,function(data){			
-				_this.setState({data:data});
+				if(data.status == 1){
+					_this.setState({data:data.data,isLoad:true});
+				}
 			});
 		}
 	},
@@ -24438,6 +24444,12 @@ var Article = React.createClass({displayName: "Article",
 		_this.setState({page:page + 1});
 		var query = this.context.query;
 		_this.loadData(this.props.url,++page,query,function(data){
+			if(data.status != 1){
+				_this.setState({
+					isDone:true 
+				});
+				return;
+			}
 			if(data.length > 0){
 				for(i in data){
 					dataset.push(data[i]);
@@ -24481,6 +24493,8 @@ var List = React.createClass({displayName: "List",
 			'#5fbeaa','#5d9cec','#81c868','#34d3eb','#ffbd4a','#f05050','#4c5667','#7266ba','fb6d9d'
 		];
 		var i = 0;
+		
+
 		if(dataset.length >= 0){
 			content = dataset.map(function(val){
 				var color = colors[i % colors.length - 1];
@@ -24512,21 +24526,21 @@ var Item = React.createClass({displayName: "Item",
 		this.context.showView && this.context.showView(target.data('id'),e);
 	},
 	render: function() {
-		var dataset = this.props.data;
+		var data = this.props.data;		
 		return (
 			React.createElement("div", {className: "article"}, 
 				React.createElement("span", {style: {background:this.props.color}, className: "mid-logo"}, 
 					React.createElement("em", {className: "baga-title"}, 
-						dataset.title.substring(0,1)
+						data.title.substring(0,1)
 					), 
-					React.createElement("em", {"data-month": moment((dataset.create_time*1000)).format('M'), className: "baga-time"}, 
-						moment((dataset.create_time*1000)).format("D")
+					React.createElement("em", {"data-month": moment(Date.parse(data.create_at)).format('M'), className: "baga-time"}, 
+						moment(Date.parse(data.create_at)).format("D")
 					)
 				), 
-				React.createElement("a", {href: "javascript:;", "data-id": dataset.id, className: "title", onClick: this.onClick}, 
-						dataset.title
+				React.createElement("a", {href: "javascript:;", "data-id": data.id, className: "title", onClick: this.onClick}, 
+						data.title
 				), 
-				React.createElement("time", null, moment((dataset.create_time*1000)).fromNow()), 				
+				React.createElement("time", null, moment(Date.parse(data.create_at)).fromNow()), 				
 				React.createElement("div", {className: "clearfix"})
 			) 			
 		);
@@ -24633,7 +24647,7 @@ var Qrcode = React.createClass({displayName: "Qrcode",
 	}
 });
 
-var Container = React.createClass({displayName: "Container",
+var Sidebar = React.createClass({displayName: "Sidebar",
 	render: function() {
 		return (
 			React.createElement("div", {className: "sidebar pull-right"}, 
@@ -24645,7 +24659,7 @@ var Container = React.createClass({displayName: "Container",
 	}	
 });
 
-module.exports = Container;
+module.exports = Sidebar;
 
 },{"./hot.jsx":224,"react":213,"react-router":78}],228:[function(require,module,exports){
 var React = require('react');
@@ -24653,7 +24667,7 @@ var Content = require('./content.jsx');
 var Comment = require('./comment.jsx');
 var Loadding = require('./load.jsx');
 
-var Container = React.createClass({displayName: "Container",
+var View = React.createClass({displayName: "View",
 	getDefaultProps: function() {
 		return {
 			active:false,
@@ -24678,7 +24692,7 @@ var Container = React.createClass({displayName: "Container",
 			$.get('/view/'+id,function(data) {
 				_this.setState({
 					isLoad:true,			
-					data:data
+					data:data.data
 				});				
 			});
 		}		
@@ -24716,7 +24730,7 @@ var Container = React.createClass({displayName: "Container",
 	}
 });
 
-module.exports = Container;
+module.exports = View;
 
 },{"./comment.jsx":222,"./content.jsx":223,"./load.jsx":226,"react":213}],229:[function(require,module,exports){
 var React = require('react');
@@ -24731,39 +24745,48 @@ var Form = React.createClass({displayName: "Form",
 		};
 	},
 	componentDidMount: function() {
+		var _this = this;
 		var editor = new Editor();
 		editor.render();
-		this.setState({
+		_this.setState({
 			editor:editor
 		});
-		$(".form-tag").tagsInput({
-			height:'auto',
-			width:'100%',
-			defaultText:'添加标签'
-		});
+		// $(".form-tag").tagsInput({
+		// 	height:'auto',
+		// 	width:'100%',
+		// 	defaultText:'添加标签',
+		// 	onChange:function(elm,val){
+		// 		_this.setState({
+		// 			tag:$(elm).val() 
+		// 		});
+		// 	}
+		// });
 	},
 	handleSubmit:function(e){
 		e.preventDefault();
-		var title = this.state.title;
-		var content = this.state.editor.codemirror.getValue();
-		$.post('/post', {title: title,content:content}, function(data, textStatus, xhr) {
+		var params = {};
+		params['title'] = this.state.title;
+		params['tag'] = this.state.tag;
+		params['content'] = this.state.editor.codemirror.getValue();
+		console.log(this.state);
+		$.post('/post', params, function(data, textStatus, xhr) {
 			if(data.status == 1){
 				var id = data.data;
-				window.location.href = "/#";
+				window.location.href = "/";
 			}else{
 				alert("error");
 			}
 		});
 	},
-	handleChange:function(e){
-		this.setState({
-			title:e.target.value 
-		});
+	handleChange:function(e){		
+		var data = {};
+		data[e.target.name] = e.target.value;
+		this.setState(data);
 	},
 	render: function() {
 		return (
 			React.createElement("form", {className: "post-form", onSubmit: this.handleSubmit}, 
-				React.createElement("input", {placeholder: "请输入标题", type: "text", value: this.state.title, onChange: this.handleChange, className: "form-control"}), 
+				React.createElement("input", {placeholder: "请输入标题", name: "title", type: "text", value: this.state.title, onChange: this.handleChange, className: "form-control"}), 
 				React.createElement("br", null), 
 				React.createElement("div", {className: "wrap-editor"}, 
 					React.createElement("textarea", {name: "content", className: "form-control"})
@@ -24771,8 +24794,8 @@ var Form = React.createClass({displayName: "Form",
 				React.createElement("br", null), 
 				React.createElement("div", {className: "form-group"}, 
 					React.createElement("div", {className: "row"}, 
-						React.createElement("div", {className: "col-sm-5 col-xs-5"}, 
-							React.createElement("input", {type: "text", className: "pull-left form-control form-tag"})
+						React.createElement("div", {className: "col-sm-5 col-xs-5"}
+							
 						), 
 						React.createElement("div", {className: "col-sm-7 col-xs-7"}, 
 							React.createElement("input", {type: "submit", className: "btn btn-submit pull-right", value: "提交"})

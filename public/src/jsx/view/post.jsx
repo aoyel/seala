@@ -10,39 +10,48 @@ var Form = React.createClass({
 		};
 	},
 	componentDidMount: function() {
+		var _this = this;
 		var editor = new Editor();
 		editor.render();
-		this.setState({
+		_this.setState({
 			editor:editor
 		});
-		$(".form-tag").tagsInput({
-			height:'auto',
-			width:'100%',
-			defaultText:'添加标签'
-		});
+		// $(".form-tag").tagsInput({
+		// 	height:'auto',
+		// 	width:'100%',
+		// 	defaultText:'添加标签',
+		// 	onChange:function(elm,val){
+		// 		_this.setState({
+		// 			tag:$(elm).val() 
+		// 		});
+		// 	}
+		// });
 	},
 	handleSubmit:function(e){
 		e.preventDefault();
-		var title = this.state.title;
-		var content = this.state.editor.codemirror.getValue();
-		$.post('/post', {title: title,content:content}, function(data, textStatus, xhr) {
+		var params = {};
+		params['title'] = this.state.title;
+		params['tag'] = this.state.tag;
+		params['content'] = this.state.editor.codemirror.getValue();
+		console.log(this.state);
+		$.post('/post', params, function(data, textStatus, xhr) {
 			if(data.status == 1){
 				var id = data.data;
-				window.location.href = "/#";
+				window.location.href = "/";
 			}else{
 				alert("error");
 			}
 		});
 	},
-	handleChange:function(e){
-		this.setState({
-			title:e.target.value 
-		});
+	handleChange:function(e){		
+		var data = {};
+		data[e.target.name] = e.target.value;
+		this.setState(data);
 	},
 	render: function() {
 		return (
 			<form className='post-form' onSubmit={this.handleSubmit}>
-				<input placeholder="请输入标题" type="text" value={this.state.title} onChange={this.handleChange}  className="form-control" />
+				<input placeholder="请输入标题" name="title" type="text" value={this.state.title} onChange={this.handleChange}  className="form-control" />
 				<br />
 				<div className="wrap-editor">
 					<textarea name="content" className="form-control" />
@@ -51,7 +60,7 @@ var Form = React.createClass({
 				<div className="form-group">
 					<div className="row">
 						<div className="col-sm-5 col-xs-5">
-							<input type='text' className='pull-left form-control form-tag' />
+							
 						</div>
 						<div className="col-sm-7 col-xs-7">
 							<input type="submit" className="btn btn-submit pull-right" value="提交" />

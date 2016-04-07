@@ -1,20 +1,33 @@
-var config = {
-	debug:true,
-	/**
-	 * default user avatar
-	 * @type {String}
-	 */
-	default_avatar:"",
-	database:{
-		host:"localhost",
-		database:"seala",
-		user:"smile",
-		password:"123456",
-		port:3306
-	},
-
-	site:{
-		"copy":"copyright seala"
-	}
+module.exports = {
+  development:{
+    username: "root",
+    password: "root",
+    database: "node",
+    host: "127.0.0.1",
+    dialect: "mysql",
+    logging:true,
+    define:{
+      charset:"utf8",
+      collate:"utf8_general_ci"
+    }
+  },
+  test: {
+    username: "root",
+    password: null,
+    database: "database_test",
+    host: "127.0.0.1",
+    dialect: "mysql"
+  },
+  production: {
+    username: "root",
+    password: null,
+    database: "database_production",
+    host: "127.0.0.1",
+    dialect: "mysql",
+    logging:false,
+    define:{
+      charset:"utf8",
+      collate:"utf8_general_ci"
+    }
+  }
 }
-module.exports = config;

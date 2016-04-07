@@ -15,7 +15,7 @@ var Comment = React.createClass({
 	},
 	load:function(){
 		var _this = this;
-		$.get('/comment/'+this.props.id, function(data) {
+		$.get('/comment/'+this.props.id, function(data) {			
 		  	if(data.status == 1){
 		  		_this.setState({
 					data:data.data
@@ -129,12 +129,12 @@ var Item = React.createClass({
 		return {__html: rawMarkup};
 	},
 	render: function() {
-		var dataset = this.props.data;
+		var data = this.props.data;
 		return (
 			<div className="comment">
 				<strong className="author">
-					{dataset.name}
-					<time>{moment((dataset.create_time*1000)).fromNow()}</time>
+					{data.name}
+					<time>{moment(Date.parse(data.create_at)).fromNow()}</time>
 				</strong>
 				<div dangerouslySetInnerHTML={this.rawMarkup()} />
 			</div>

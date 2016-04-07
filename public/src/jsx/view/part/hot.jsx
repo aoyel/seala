@@ -44,15 +44,17 @@ var List = React.createClass({
 	componentDidMount: function() {
 		var _this = this;
 		_this.load(this.props.url, function(data) {
-			_this.setState({
-				data: data
-			});
+			if(data.status == 1){
+				_this.setState({
+					data: data.data
+				});
+			}			
 		});
 	},
 
 	render: function() {
 		var _this = this;
-		var dataset = _this.state.data;
+		var dataset = _this.state.data;		
 		var content = dataset.map(function(val){
 			return (
 				<Item data={val}/>

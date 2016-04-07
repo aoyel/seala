@@ -131,7 +131,7 @@ module.exports = function(grunt) {
         ],
         tasks: [
           'browserify',
-          'uglify',
+          // 'uglify',
         ], 
         options: { spawn: false}
       }
