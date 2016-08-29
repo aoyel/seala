@@ -1,0 +1,6 @@
+{
+  "name": "Seala",
+  "tagline": "A open source ReactJS + NodeJS ( express ) blog system",
+  "body": "## Installation\r\n\r\n```\r\ngit clone https://github.com/aoyel/seala.git\r\n\r\ncd seala\r\n\r\n```\r\n\r\n## Quick Start\r\n\r\n```\r\n# use grunt build \r\ngrunt\r\n\r\n#start server\r\nnpm start\r\n```\r\n\r\n## post a new article\r\n\r\nvisit *http:{ip}:3000#post*\r\n\r\n## other\r\n\r\n* Home page [seala](https://seala.link)\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
